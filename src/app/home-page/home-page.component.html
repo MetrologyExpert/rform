@@ -46,9 +46,6 @@
     </div>
   
     <button type="submit" [disabled]="!profileForm.valid">Submit</button>
-    <br>
-    <button type="button" (click)="updateProfile()">Update Profile</button>
-
   </form>
   
   <hr>
@@ -74,22 +71,14 @@
             <td>{{ i.address.state }}</td>
             <td>{{ i.address.street }}</td>
             <td>{{ i.key }}</td>
-            <td>     <button type="button" (click)="readData(i.key)">Read Data Profile</button>
-              <a [routerLink]="['/', i.key]" >Edit </a></td>
+            <td><button type="button" (click)="readData(i.key)">View</button>
+            <td><button type="button"  (click)="updateData(i.key)"> Update </button></td>
+            <!-- [routerLink]="['/', i.key] -->
         </tr>
     </tbody>
 </table>
 
 
   
-<p>
-    Form Value: {{ profileForm.value | json }}
-  </p>
-  
-  
-  <p>
-    Form Status: {{ profileForm.status }}
-  </p>
-  
-  <p>
-  </p>
+<p>Form Value: {{ profileForm.value | json }} </p>
+<p>Form Status: {{ profileForm.status }} </p>

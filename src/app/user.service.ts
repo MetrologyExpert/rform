@@ -31,4 +31,8 @@ user:any=[];
 
   }
 
+  updateData(id, data){
+    return this.db.object('/address/' + id).update(data);
+  }
+
 }

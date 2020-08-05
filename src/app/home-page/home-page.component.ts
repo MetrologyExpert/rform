@@ -17,7 +17,7 @@ import {map, take} from 'rxjs/operators';
 })
 
 
-export class HomePageComponent implements OnInit{
+export class HomePageComponent {
 
   users$: Observable<any>;
   profileForm: FormGroup;
@@ -28,62 +28,46 @@ export class HomePageComponent implements OnInit{
     private userService: UserService,
     private route: ActivatedRoute
     ) { 
-
-
     this.users$ =  this.userService.getAll().snapshotChanges().pipe(map(changes => changes.map(c => (
        {key: c.payload.key, ...c.payload.exportVal()}
       
     ))));
+
+    this.profileForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      address: this.fb.group({
+        street: ['', Validators.required],
+        city: ['', Validators.required],
+        state: ['', Validators.required],
+        zip: ['', Validators.required]
+      }),
+      aliases: this.fb.array([
+        this.fb.control('',Validators.required), 
+      ])
+    });
+
     }
 
-    ngOnInit(){
-      this.profileForm = this.fb.group({
-        firstName: ['', Validators.required],
-        lastName: [''],
-        address: this.fb.group({
-          street: [''],
-          city: [''],
-          state: [''],
-          zip: ['']
-        }),
-        aliases: this.fb.array([
-          this.fb.control('')
-        ])
-      });
-    }
-
-
-
+    // property Path to aliases
   get aliases() {
     return this.profileForm.get('aliases') as FormArray;
   }
-
-  updateProfile() {
-    this.profileForm.patchValue({
-      firstName: 'Nancy',
-      address: {
-        street: '123 Drew Street'
-      }
-    });
-  }
-
   
+  //add new controls to Aliases FormArray
   addAlias() {
-    this.aliases.push(new FormControl());
+    this.aliases.push(this.fb.control('', Validators.required));
   }
 
-  editdAlias(patchVal:any) {
+  //load controls to fill up with values
+  loadAlias(patchVal:any) {
     this.aliases.push(this.fb.control(patchVal));
   }
 
-  onSubmit() {
-    // TODO: Use EventEmitter with form value;
-    console.warn(this.profileForm.value);
-    if (this.profileForm.valid) this.userService.create(this.profileForm.value);
-  }
-
+  
+   //View data 
   readData(key:string){
-    this.userService.readUserData(key).snapshotChanges().subscribe(action => {
+   this.userService.readUserData(key).snapshotChanges().subscribe(action => {
       //cleat the form
       this.aliases.clear();
       //load static controls values
@@ -95,7 +79,7 @@ export class HomePageComponent implements OnInit{
       //load dynamic control values
       this.arr = action.payload.val()['aliases'];
       this.arr.forEach(element => {
-        this.editdAlias(element)
+        this.loadAlias(element)
         console.log(element);
       });
  
@@ -106,4 +90,22 @@ export class HomePageComponent implements OnInit{
     });
   }
 
+
+  updateData(id){
+    this.userService.updateData(id, this.profileForm.value);
+  }
+
+  // if (this.id) 
+  // {
+  //   this.productService.updateProduct(this.id, product);
+  //   console.log(product);
+  // }
+
+  //Submit new object/item in list
+  onSubmit() {
+    console.warn(this.profileForm.value);
+    if (this.profileForm.valid){      
+         this.userService.create(this.profileForm.value);
+    }
+  }
 }
