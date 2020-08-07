@@ -1,4 +1,3 @@
-import { IUser } from './model/iuser';
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
@@ -34,5 +33,11 @@ user:any=[];
   updateData(id, data){
     return this.db.object('/address/' + id).update(data);
   }
+
+  delete(id){
+    return this.db.object('/address/' + id).remove();
+  }
+
+
 
 }
