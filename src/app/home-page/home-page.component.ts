@@ -11,6 +11,8 @@ import {Observable, observable} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
 import { element } from 'protractor';
+import { ReturnStatement } from '@angular/compiler';
+import { userInfo } from 'os';
 
 
 @Component({
@@ -27,8 +29,8 @@ export class HomePageComponent {
   profileForm: FormGroup;
   arr:any[];
   index:number = 0;
-  calculator: User;
-
+  
+  
 
   constructor
   ( private fb: FormBuilder, 
@@ -72,11 +74,18 @@ export class HomePageComponent {
   }
 
   //load controls to fill up with values
-  loadAlias(patchVal:any) {
+  loadAlias(patchVal:number) {
     this.aliases.push(this.fb.control(patchVal));
   }
 
+  addNumber() {
+    return console.log(this.user.total);
+
+  }
+
    //View data 
+   sum:number = 0;
+
   readData(key:string){
    this.userService.readUserData(key).snapshotChanges().subscribe(action => {
       //cleat the form
@@ -91,7 +100,10 @@ export class HomePageComponent {
       //load dynamic control values
       this.arr = action.payload.val()['aliases'];
       this.arr.forEach(element => {
-        this.loadAlias(element)
+        this.loadAlias(element);     
+
+          this.sum = element as number;
+          console.log(this.sum);
              });
  
       // this.arr = action.payload.exportVal(),
@@ -105,6 +117,8 @@ export class HomePageComponent {
   updateData(id){
     this.userService.updateData(id, this.profileForm.value);
   }
+
+ 
 
   // if (this.id) 
   // {

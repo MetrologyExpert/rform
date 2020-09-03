@@ -10,13 +10,21 @@ export class User {
     zip:number;
     aliases: Array<number>;
 
-    get total() {
+    // get total(this.aliases) {
+    //     let sum = 0;
+    //     for (let i in this.aliases) 
+    //       sum += this.aliases[i];
+    //     return sum;
+    //   }
+
+
+
+      get total() {
         let sum = 0;
-        for (let alias in this.aliases) 
-          sum += this.aliases[alias];
+        for (let i in this.aliases) 
+          sum += this.aliases[i]
         return sum;
       }
-
     
 // expected output: 81
 }
